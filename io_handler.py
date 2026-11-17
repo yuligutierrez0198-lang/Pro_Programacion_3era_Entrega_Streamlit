@@ -70,3 +70,37 @@ def cargar_grafo(ruta):
     except FileNotFoundError:
         print("Error: No se encontró el archivo")
     return grafo
+
+
+def guardar_conexion(ruta, origen, destino, peso):
+    """
+    Guarda una nueva conexión en el archivo CSV
+    sin eliminar las conexiones anteriores.
+    """
+
+    import os
+
+    # Comprobamos si el archivo existe o está vacío.
+    archivo_nuevo = (
+        not os.path.exists(ruta)
+        or os.path.getsize(ruta) == 0
+    )
+
+    # Abrimos el archivo en modo agregar.
+    with open(ruta, "a", newline="", encoding="utf-8") as archivo:
+
+        escritor = csv.DictWriter(
+            archivo,
+            fieldnames=["origen", "destino", "peso"]
+        )
+
+        # Escribimos los encabezados si es necesario.
+        if archivo_nuevo:
+            escritor.writeheader()
+
+        # Guardamos la conexión.
+        escritor.writerow({
+            "origen": origen.strip(),
+            "destino": destino.strip(),
+            "peso": peso
+        })
